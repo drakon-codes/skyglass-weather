@@ -10,6 +10,8 @@ const toggleVariants = cva(
     variants: {
       variant: {
         default: "bg-transparent",
+        segment:
+          "rounded-full px-3 text-foreground hover:bg-glass-strong hover:text-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground",
         outline:
           "border border-input bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground",
       },

@@ -28,3 +28,11 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- All Open-Meteo calls live in `src/services/weatherApi.ts`; base URLs and tunables in `src/config.ts`. Why: providers can be swapped in one place.
+- Forecasts are fetched in metric and converted at display time via `src/lib/units.ts`. Why: unit toggles stay instant and share one cache entry.
+- Persisted UI state (units, favourites, theme, last city) goes through `usePersistentState` (useSyncExternalStore over localStorage). Why: SSR-safe hydration and cross-component sync without a context provider.
+- Open-Meteo local time strings are parsed by `src/lib/time.ts`, never via `new Date(iso)` in the browser timezone. Why: times must show in the city's timezone.
+- Weather visuals (glass, sky gradients) are tokens/utilities in `src/styles.css`; components use semantic classes only.
