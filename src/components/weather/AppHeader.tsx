@@ -17,7 +17,7 @@ interface AppHeaderProps {
 
 export function AppHeader({ units, onTemperatureChange, onWindChange, onSelectLocation }: AppHeaderProps) {
   return (
-    <header className="relative z-20 grid gap-3 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-6">
+    <header className="relative z-20 grid gap-3 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center sm:gap-4 lg:gap-6">
       <div className="flex items-center justify-between gap-3">
         <h1 className="sky-text flex items-center gap-2 text-xl font-bold tracking-tight">
           <span className="glass grid size-10 place-items-center rounded-2xl">
@@ -25,7 +25,7 @@ export function AppHeader({ units, onTemperatureChange, onWindChange, onSelectLo
           </span>
           {APP_CONFIG.appName}
         </h1>
-        <div className="lg:hidden">
+        <div className="sm:hidden">
           <ThemeToggle />
         </div>
       </div>
@@ -41,7 +41,7 @@ export function AppHeader({ units, onTemperatureChange, onWindChange, onSelectLo
           onTemperatureChange={onTemperatureChange}
           onWindChange={onWindChange}
         />
-        <div className="hidden lg:block">
+        <div className="hidden sm:block">
           <ThemeToggle />
         </div>
       </div>

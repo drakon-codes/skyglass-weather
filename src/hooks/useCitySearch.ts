@@ -1,4 +1,4 @@
-// Debounced city autocomplete backed by the geocoding API.
+// Debounced city, town and village autocomplete backed by the geocoding APIs.
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { APP_CONFIG } from "@/config";

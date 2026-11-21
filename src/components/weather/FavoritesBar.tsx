@@ -9,9 +9,10 @@ interface FavoritesBarProps {
   activeId: string;
   onSelect: (location: GeoLocation) => void;
   onRemove: (id: string) => void;
+  onReorder: (draggedId: string, targetId: string) => void;
 }
 
-export function FavoritesBar({ favorites, activeId, onSelect, onRemove }: FavoritesBarProps) {
+export function FavoritesBar({ favorites, activeId, onSelect, onRemove, onReorder }: FavoritesBarProps) {
   return (
     <nav aria-label="Saved cities" className="flex items-center gap-3 overflow-x-auto pb-1">
       <span className="sky-text-muted flex shrink-0 items-center gap-1.5 text-xs font-bold uppercase tracking-wider">
@@ -30,8 +31,16 @@ export function FavoritesBar({ favorites, activeId, onSelect, onRemove }: Favori
             return (
               <li
                 key={city.id}
+                draggable
+                onDragStart={(event) => event.dataTransfer.setData("text/city-id", city.id)}
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  const draggedId = event.dataTransfer.getData("text/city-id");
+                  if (draggedId) onReorder(draggedId, city.id);
+                }}
                 className={cn(
-                  "flex shrink-0 items-center rounded-full text-sm transition-colors animate-in fade-in zoom-in-95",
+                  "group flex shrink-0 items-center rounded-full text-sm transition-colors animate-in fade-in zoom-in-95",
                   active ? "bg-primary text-primary-foreground" : "glass hover:bg-glass-strong",
                 )}
               >
@@ -47,7 +56,7 @@ export function FavoritesBar({ favorites, activeId, onSelect, onRemove }: Favori
                   type="button"
                   onClick={() => onRemove(city.id)}
                   aria-label={`Remove ${city.name} from saved cities`}
-                  className="mr-1 grid size-7 place-items-center rounded-full opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="mr-1 grid size-7 place-items-center rounded-full opacity-40 transition-opacity hover:opacity-100 focus:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:opacity-0 sm:group-hover:opacity-100"
                 >
                   <X className="size-3.5" aria-hidden />
                 </button>

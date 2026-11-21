@@ -2,7 +2,7 @@
 import { Droplets } from "lucide-react";
 
 import { formatDayLabel } from "@/lib/time";
-import { formatTemperature } from "@/lib/units";
+import { formatPrecipitation, formatTemperature } from "@/lib/units";
 import { getWeatherInfo } from "@/lib/weatherCodes";
 import type { DailyPoint, TemperatureUnit } from "@/types/weather";
 import { WeatherIcon } from "./WeatherIcon";
@@ -30,9 +30,10 @@ export function DailyForecastCard({ day, index, unit, weekMin, weekMax }: DailyF
     >
       <p className="font-display text-sm font-semibold">{dayLabel}</p>
       <WeatherIcon code={day.weatherCode} className="size-8" label={condition} />
-      <p className="flex items-center gap-0.5 text-xs font-medium text-rain" title="Chance of rain">
+      <p className="flex items-center gap-0.5 text-xs font-medium text-rain" title="Chance and amount of precipitation">
         <Droplets className="size-3" aria-hidden />
         {day.precipitationChance}%<span className="sr-only"> chance of rain</span>
+        <span className="text-muted-foreground">· {formatPrecipitation(day.precipitationAmount, "kmh")}</span>
       </p>
       <div className="flex items-center gap-2 text-sm sm:w-full sm:flex-col sm:gap-1">
         <span className="w-9 text-right text-muted-foreground sm:hidden">

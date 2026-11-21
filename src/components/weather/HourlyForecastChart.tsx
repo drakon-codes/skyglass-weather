@@ -3,7 +3,7 @@ import { Area, Bar, CartesianGrid, ComposedChart, Tooltip, XAxis, YAxis } from "
 
 import { ChartContainer, type ChartConfig } from "@/components/ui/chart";
 import { formatHour } from "@/lib/time";
-import { convertTemperature } from "@/lib/units";
+import { convertTemperature, formatPrecipitation } from "@/lib/units";
 import { getWeatherInfo } from "@/lib/weatherCodes";
 import type { HourlyPoint, TemperatureUnit } from "@/types/weather";
 import { HourlyIconStrip } from "./HourlyIconStrip";
@@ -18,6 +18,7 @@ interface Row {
   label: string;
   temperature: number;
   precipitation: number;
+  precipitationAmount: number;
   condition: string;
 }
 
@@ -36,6 +37,7 @@ function HourTooltip({ active, payload }: TooltipBodyProps) {
       <p className="mt-1">
         <span className="font-semibold text-chart-1">{row.temperature}°</span> ·{" "}
         <span className="font-semibold text-chart-2">{row.precipitation}% rain</span>
+        <span className="ml-1 text-muted-foreground">{formatPrecipitation(row.precipitationAmount, "kmh")}</span>
       </p>
     </div>
   );
@@ -51,9 +53,14 @@ export function HourlyForecastChart({ hours, unit }: HourlyForecastChartProps) {
     label: formatHour(h.time),
     temperature: Math.round(convertTemperature(h.temperature, unit)),
     precipitation: h.precipitationChance,
+    precipitationAmount: h.precipitationAmount,
     condition: getWeatherInfo(h.weatherCode).label,
   }));
   const temps = data.map((d) => d.temperature);
+  const rainRow = data.find((d) => d.precipitation >= 50);
+  const summaryText = rainRow
+    ? `Rain is likely around ${rainRow.label}, with up to ${rainRow.precipitation}% chance.`
+    : "No significant rain is expected in the next 24 hours.";
   const summary = data.length
     ? `Next 24 hours: high ${Math.max(...temps)}°, low ${Math.min(...temps)}°, up to ${Math.max(
         ...data.map((d) => d.precipitation),
@@ -72,6 +79,7 @@ export function HourlyForecastChart({ hours, unit }: HourlyForecastChartProps) {
       }
     >
       <p className="sr-only">{summary}</p>
+      <p className="mb-3 text-sm text-muted-foreground">{summaryText}</p>
       <div className="-mx-2 min-h-64 flex-1 overflow-x-auto px-2" aria-hidden>
         <ChartContainer config={chartConfig} className="aspect-auto h-full min-h-64 w-full min-w-[560px]">
           <ComposedChart data={data} margin={{ top: 10, right: 0, left: -16, bottom: 0 }}>

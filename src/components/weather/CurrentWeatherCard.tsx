@@ -9,6 +9,8 @@ import {
   Sunset,
   Thermometer,
   Wind,
+  Leaf,
+  Clock3,
 } from "lucide-react";
 
 import { formatRegion } from "@/lib/location";
@@ -19,6 +21,7 @@ import {
   formatVisibility,
   formatWindSpeed,
   uvIndexLabel,
+  airQualityLabel,
   windDirectionLabel,
 } from "@/lib/units";
 import { getWeatherInfo } from "@/lib/weatherCodes";
@@ -35,10 +38,11 @@ interface CurrentWeatherCardProps {
   units: UnitPreferences;
   isFavorite: boolean;
   onToggleFavorite: () => void;
+  airQuality?: { aqi: number | null; pm25: number | null };
 }
 
 export function CurrentWeatherCard(props: CurrentWeatherCardProps) {
-  const { location, current, today, timezone, units, isFavorite, onToggleFavorite } = props;
+  const { location, current, today, timezone, units, isFavorite, onToggleFavorite, airQuality } = props;
   const t = units.temperature;
   const condition = getWeatherInfo(current.weather_code).label;
   const region = formatRegion(location) || timezone.replace(/_/g, " ");
@@ -52,7 +56,10 @@ export function CurrentWeatherCard(props: CurrentWeatherCardProps) {
         <div className="min-w-0">
           <h2 className="truncate text-2xl font-bold tracking-tight">{location.name}</h2>
           <p className="truncate text-sm text-muted-foreground">{region}</p>
-          <p className="mt-0.5 text-xs text-muted-foreground">{formatLocalDateTime(current.time)}</p>
+          <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
+            <Clock3 className="size-3" aria-hidden />
+            Updated {formatLocalDateTime(current.time)}
+          </p>
         </div>
         <button
           type="button"
@@ -104,6 +111,12 @@ export function CurrentWeatherCard(props: CurrentWeatherCardProps) {
           label="UV index"
           value={current.uv_index === null ? "—" : String(Math.round(current.uv_index))}
           hint={uvIndexLabel(current.uv_index)}
+        />
+        <WeatherStat
+          icon={Leaf}
+          label="Air quality"
+          value={airQuality?.aqi == null ? "—" : String(Math.round(airQuality.aqi))}
+          hint={airQualityLabel(airQuality?.aqi)}
         />
         <WeatherStat icon={Eye} label="Visibility" value={formatVisibility(current.visibility, units.wind)} />
         <WeatherStat icon={Sunrise} label="Sunrise" value={today?.sunrise ? formatClock(today.sunrise) : "—"} />

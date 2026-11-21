@@ -1,5 +1,6 @@
 // Page-level container: wires hooks (location, units, favourites, forecast) to the UI.
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import { APP_CONFIG } from "@/config";
 import { useFavorites } from "@/hooks/useFavorites";
@@ -8,6 +9,7 @@ import { useSelectedLocation } from "@/hooks/useSelectedLocation";
 import { useUnits } from "@/hooks/useUnits";
 import { selectDailyForecast, selectUpcomingHours } from "@/lib/forecast";
 import { getSkyTheme, isDarkSky } from "@/lib/weatherCodes";
+import { fetchAirQuality, reverseGeocode } from "@/services/weatherApi";
 import { AppHeader } from "./AppHeader";
 import { CurrentWeatherCard } from "./CurrentWeatherCard";
 import { DailyForecast } from "./DailyForecast";
@@ -20,8 +22,36 @@ import { WeatherBackground } from "./WeatherBackground";
 export function WeatherDashboard() {
   const [location, setLocation] = useSelectedLocation();
   const { units, setTemperatureUnit, setWindUnit } = useUnits();
-  const { favorites, isFavorite, toggle, remove } = useFavorites();
+  const { favorites, isFavorite, toggle, remove, reorder } = useFavorites();
   const { data: forecast, isPending, isError, error, refetch } = useForecast(location);
+  const [placeName, setPlaceName] = useState(location.name);
+  const airQualityQuery = useQuery({
+    queryKey: ["air-quality", location.latitude.toFixed(3), location.longitude.toFixed(3)],
+    queryFn: ({ signal }) => fetchAirQuality(location.latitude, location.longitude, signal),
+    staleTime: APP_CONFIG.forecastStaleTimeMs,
+  });
+
+  useEffect(() => {
+    setPlaceName(location.name);
+  }, [location]);
+
+  useEffect(() => {
+    if (!location.id.startsWith("gps:")) return;
+    const controller = new AbortController();
+    void reverseGeocode(location.latitude, location.longitude, controller.signal)
+      .then((place) => {
+        if (!place) return;
+        setPlaceName(place.name);
+        setLocation({
+          ...location,
+          name: place.name,
+          admin1: place.admin1,
+          country: place.country,
+        });
+      })
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, [location.id, location.latitude, location.longitude, setLocation]);
 
   const hours = useMemo(
     () => (forecast ? selectUpcomingHours(forecast, APP_CONFIG.hourlyHours) : []),
@@ -34,7 +64,7 @@ export function WeatherDashboard() {
 
   return (
     <>
-      <WeatherBackground sky={sky} />
+      <WeatherBackground sky={sky} effectKey={location.id} />
       <a
         href="#forecast"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
@@ -57,9 +87,13 @@ export function WeatherDashboard() {
           activeId={location.id}
           onSelect={setLocation}
           onRemove={remove}
+          onReorder={reorder}
         />
 
         <main id="forecast" tabIndex={-1} className="flex-1 outline-none">
+          <p className="sr-only" aria-live="polite">
+            {isPending ? `Loading weather for ${placeName}` : isError ? "Weather could not be loaded" : `Weather loaded for ${placeName}`}
+          </p>
           {isPending ? (
             <DashboardSkeleton />
           ) : isError ? (
@@ -74,6 +108,10 @@ export function WeatherDashboard() {
                 units={units}
                 isFavorite={isFavorite(location)}
                 onToggleFavorite={() => toggle(location)}
+                airQuality={{
+                  aqi: airQualityQuery.data?.current?.us_aqi ?? null,
+                  pm25: airQualityQuery.data?.current?.pm2_5 ?? null,
+                }}
               />
               <div className="lg:col-span-2">
                 <HourlyForecastChart hours={hours} unit={units.temperature} />
@@ -89,6 +127,11 @@ export function WeatherDashboard() {
           Weather data by{" "}
           <a href="https://open-meteo.com/" target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-2">
             Open-Meteo
+          </a>
+          {" · "}
+          Place search by{" "}
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-2">
+            OpenStreetMap
           </a>
         </footer>
       </div>

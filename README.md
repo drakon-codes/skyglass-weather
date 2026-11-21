@@ -6,7 +6,7 @@ Tailwind CSS v4, shadcn/ui, Recharts and TanStack Query. Weather data comes from
 
 ## Features
 
-- City search with debounced autocomplete (keyboard friendly)
+- City, town and village search with debounced autocomplete (keyboard friendly)
 - Current conditions: temperature, feels like, humidity, wind, pressure, UV, visibility, sunrise/sunset
 - 24-hour temperature + rain-chance chart
 - 7-day forecast cards
@@ -15,6 +15,10 @@ Tailwind CSS v4, shadcn/ui, Recharts and TanStack Query. Weather data comes from
 - Light/dark mode (saved, defaults to OS preference)
 - Background gradient that follows the weather and day/night
 - "Use my location" via browser geolocation
+- Reverse-geocoded place names for geolocation
+- Air-quality index and precipitation amounts
+- Reorderable saved cities
+- Installable PWA shell with cached weather responses
 - Loading skeletons, error state with retry, and empty states
 
 ## Getting started
@@ -52,9 +56,5 @@ Notes:
 
 ## Future ideas
 
-- Reverse geocoding so "My location" shows a real city name
-- Weather alerts and air-quality index (Open-Meteo Air Quality API)
-- Hourly icon strip and precipitation amount (mm/in)
-- Drag-to-reorder saved cities
-- PWA / offline support with cached last forecast
+- Weather alerts
 - Localisation (languages, 24-hour clock)

@@ -15,6 +15,7 @@ export function selectUpcomingHours(forecast: ForecastResponse, hours: number): 
       time,
       temperature: hourly.temperature_2m[i] ?? 0,
       precipitationChance: hourly.precipitation_probability[i] ?? 0,
+      precipitationAmount: hourly.precipitation?.[i] ?? 0,
       weatherCode: hourly.weather_code[i] ?? 0,
       isDay: hourly.is_day[i] === 1,
     };
@@ -29,6 +30,7 @@ export function selectDailyForecast(forecast: ForecastResponse): DailyPoint[] {
     maxTemperature: daily.temperature_2m_max[i] ?? 0,
     minTemperature: daily.temperature_2m_min[i] ?? 0,
     precipitationChance: daily.precipitation_probability_max[i] ?? 0,
+    precipitationAmount: daily.precipitation_sum?.[i] ?? 0,
     sunrise: daily.sunrise[i] ?? "",
     sunset: daily.sunset[i] ?? "",
     uvIndexMax: daily.uv_index_max[i] ?? null,

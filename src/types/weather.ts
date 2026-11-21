@@ -44,6 +44,7 @@ export interface ForecastHourly {
   time: string[];
   temperature_2m: number[];
   precipitation_probability: (number | null)[];
+  precipitation: (number | null)[];
   weather_code: number[];
   is_day: (0 | 1)[];
 }
@@ -54,6 +55,7 @@ export interface ForecastDaily {
   temperature_2m_max: number[];
   temperature_2m_min: number[];
   precipitation_probability_max: (number | null)[];
+  precipitation_sum: (number | null)[];
   sunrise: string[];
   sunset: string[];
   uv_index_max: (number | null)[];
@@ -125,6 +127,7 @@ export interface HourlyPoint {
   /** Temperature in °C (convert for display). */
   temperature: number;
   precipitationChance: number;
+  precipitationAmount: number;
   weatherCode: number;
   isDay: boolean;
 }
@@ -135,6 +138,7 @@ export interface DailyPoint {
   maxTemperature: number;
   minTemperature: number;
   precipitationChance: number;
+  precipitationAmount: number;
   sunrise: string;
   sunset: string;
   uvIndexMax: number | null;

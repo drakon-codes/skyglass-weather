@@ -31,10 +31,17 @@ export function useGeolocation() {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           setStatus("idle");
-          onSuccess(pos.coords.latitude, pos.coords.longitude);
+          const { latitude, longitude, accuracy } = pos.coords;
+          console.info("[Geolocation]", {
+            latitude,
+            longitude,
+            accuracyMeters: Math.round(accuracy),
+            mapUrl: `https://www.google.com/maps?q=${latitude},${longitude}`,
+          });
+          onSuccess(latitude, longitude);
         },
         (err) => fail(MESSAGES[err.code] ?? "Couldn't get your location."),
-        { enableHighAccuracy: false, timeout: APP_CONFIG.geolocationTimeoutMs, maximumAge: 300_000 },
+        { enableHighAccuracy: true, timeout: APP_CONFIG.geolocationTimeoutMs, maximumAge: 0 },
       );
     },
     [],

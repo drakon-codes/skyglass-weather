@@ -4,15 +4,19 @@ import type { GeoLocation } from "@/types/weather";
 export const API_CONFIG = {
   /** Open-Meteo geocoding (city search). */
   geocodingBaseUrl: "https://geocoding-api.open-meteo.com/v1",
+  /** Nominatim fills smaller-place gaps that may be absent from the primary geocoder. */
+  placeSearchBaseUrl: "https://nominatim.openstreetmap.org",
   /** Open-Meteo forecast. */
   forecastBaseUrl: "https://api.open-meteo.com/v1",
+  airQualityBaseUrl: "https://air-quality-api.open-meteo.com/v1",
+  reverseGeocodingBaseUrl: "https://nominatim.openstreetmap.org",
 } as const;
 
 export const APP_CONFIG = {
   appName: "Nimbus",
   searchDebounceMs: 300,
   searchMinChars: 2,
-  searchResultLimit: 6,
+  searchResultLimit: 12,
   forecastDays: 7,
   hourlyHours: 24,
   /** How long fetched forecasts are considered fresh. */

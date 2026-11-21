@@ -1,4 +1,4 @@
-// City autocomplete combobox (WAI-ARIA pattern): arrows to move, Enter to pick, Esc to close.
+// Place autocomplete combobox (WAI-ARIA pattern): arrows to move, Enter to pick, Esc to close.
 import { Loader2, Search } from "lucide-react";
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 
@@ -52,7 +52,7 @@ export function CitySearch({ onSelect }: { onSelect: (location: GeoLocation) => 
   return (
     <div className="relative w-full">
       <label htmlFor={inputId} className="sr-only">
-        Search for a city
+        Search for a city, town or village
       </label>
       <Search
         className="pointer-events-none absolute left-4 z-10 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
@@ -65,7 +65,7 @@ export function CitySearch({ onSelect }: { onSelect: (location: GeoLocation) => 
         role="combobox"
         autoComplete="off"
         spellCheck={false}
-        placeholder="Search city…"
+        placeholder="Search city, town or village…"
         value={text}
         onChange={(e) => {
           setText(e.target.value);

@@ -32,6 +32,21 @@ export function formatVisibility(meters: number | null, unit: WindUnit): string 
 
 export const formatPressure = (hPa: number) => `${Math.round(hPa)} hPa`;
 
+export function formatPrecipitation(mm: number, unit: WindUnit): string {
+  if (unit === "mph") return `${(mm / 25.4).toFixed(mm < 1 ? 2 : 1)} in`;
+  return `${mm.toFixed(mm < 1 ? 1 : 0)} mm`;
+}
+
+export function airQualityLabel(aqi: number | null | undefined): string {
+  if (aqi == null) return "Unavailable";
+  if (aqi <= 50) return "Good";
+  if (aqi <= 100) return "Moderate";
+  if (aqi <= 150) return "Sensitive";
+  if (aqi <= 200) return "Unhealthy";
+  if (aqi <= 300) return "Very unhealthy";
+  return "Hazardous";
+}
+
 const COMPASS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 export function windDirectionLabel(degrees: number): string {
   return COMPASS[Math.round((((degrees % 360) + 360) % 360) / 45) % 8] ?? "N";

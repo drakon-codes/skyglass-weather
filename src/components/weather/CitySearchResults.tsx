@@ -45,8 +45,8 @@ export function CitySearchResults(props: CitySearchResultsProps) {
       ) : results.length === 0 ? (
         <EmptyState
           icon={SearchX}
-          title={`No cities match “${query}”`}
-          description="Check the spelling or try a nearby larger city."
+          title={`No places match “${query}”`}
+          description="Check the spelling or try a nearby town, village or larger city."
           className="py-4"
         />
       ) : null}
