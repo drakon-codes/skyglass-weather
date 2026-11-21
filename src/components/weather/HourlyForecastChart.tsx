@@ -67,14 +67,14 @@ export function HourlyForecastChart({ hours, unit }: HourlyForecastChartProps) {
       action={
         <div className="flex gap-3 text-xs text-muted-foreground" aria-hidden>
           <span className="flex items-center gap-1.5"><i className="size-2 rounded-full bg-chart-1" />Temp</span>
-          <span className="flex items-center gap-1.5"><i className="size-2 rounded-full bg-chart-2" />Rain %</span>
+          <span className="flex items-center gap-1.5"><i className="size-2 rounded-sm bg-chart-2" />Rain chance (%)</span>
         </div>
       }
     >
       <p className="sr-only">{summary}</p>
       <div className="-mx-2 min-h-64 flex-1 overflow-x-auto px-2" aria-hidden>
         <ChartContainer config={chartConfig} className="aspect-auto h-full min-h-64 w-full min-w-[560px]">
-          <ComposedChart data={data} margin={{ top: 10, right: 4, left: -16, bottom: 0 }}>
+          <ComposedChart data={data} margin={{ top: 10, right: 0, left: -16, bottom: 0 }}>
             <defs>
               <linearGradient id="tempFill" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="var(--color-temperature)" stopOpacity={0.45} />
@@ -84,9 +84,27 @@ export function HourlyForecastChart({ hours, unit }: HourlyForecastChartProps) {
             <CartesianGrid vertical={false} strokeDasharray="3 6" />
             <XAxis dataKey="label" tickLine={false} axisLine={false} interval={2} tickMargin={8} />
             <YAxis yAxisId="temp" tickLine={false} axisLine={false} tickFormatter={(v) => `${v}°`} domain={["dataMin - 2", "dataMax + 2"]} />
-            <YAxis yAxisId="rain" orientation="right" hide domain={[0, 100]} />
+            <YAxis
+              yAxisId="rain"
+              orientation="right"
+              domain={[0, 100]}
+              ticks={[0, 25, 50, 75, 100]}
+              tickFormatter={(v) => `${v}%`}
+              tickLine={false}
+              axisLine={false}
+              width={40}
+            />
             <Tooltip content={<HourTooltip />} cursor={{ stroke: "var(--border)" }} />
-            <Bar yAxisId="rain" dataKey="precipitation" fill="var(--color-precipitation)" fillOpacity={0.35} radius={[4, 4, 0, 0]} barSize={10} />
+            {/* Faint 0-100% track behind each bar keeps the scale readable even at 0%. */}
+            <Bar
+              yAxisId="rain"
+              dataKey="precipitation"
+              fill="var(--color-precipitation)"
+              fillOpacity={0.5}
+              radius={[4, 4, 0, 0]}
+              barSize={12}
+              background={{ fill: "var(--color-precipitation)", fillOpacity: 0.08, radius: 4 }}
+            />
             <Area
               yAxisId="temp"
               type="monotone"

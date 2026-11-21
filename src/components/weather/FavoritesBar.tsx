@@ -14,8 +14,8 @@ interface FavoritesBarProps {
 export function FavoritesBar({ favorites, activeId, onSelect, onRemove }: FavoritesBarProps) {
   return (
     <nav aria-label="Saved cities" className="flex items-center gap-3 overflow-x-auto pb-1">
-      <span className="flex shrink-0 items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/80">
-        <Star className="size-3.5 fill-favorite text-favorite" aria-hidden />
+      <span className="sky-text-muted flex shrink-0 items-center gap-1.5 text-xs font-bold uppercase tracking-wider">
+        <Star className="size-3.5 fill-favorite" aria-hidden />
         Saved
       </span>
 

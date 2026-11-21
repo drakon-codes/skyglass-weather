@@ -62,3 +62,8 @@ export function getSkyTheme(code: number, isDay: boolean): SkyTheme {
       return "storm";
   }
 }
+
+/** Night and storm skies are dark, so text and glass on them switch to the dark palette. */
+export function isDarkSky(sky: SkyTheme): boolean {
+  return sky.endsWith("night") || sky === "storm";
+}

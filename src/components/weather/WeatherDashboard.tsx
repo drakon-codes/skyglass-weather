@@ -7,7 +7,7 @@ import { useForecast } from "@/hooks/useForecast";
 import { useSelectedLocation } from "@/hooks/useSelectedLocation";
 import { useUnits } from "@/hooks/useUnits";
 import { selectDailyForecast, selectUpcomingHours } from "@/lib/forecast";
-import { getSkyTheme } from "@/lib/weatherCodes";
+import { getSkyTheme, isDarkSky } from "@/lib/weatherCodes";
 import { AppHeader } from "./AppHeader";
 import { CurrentWeatherCard } from "./CurrentWeatherCard";
 import { DailyForecast } from "./DailyForecast";
@@ -41,7 +41,11 @@ export function WeatherDashboard() {
       >
         Skip to forecast
       </a>
-      <div className="mx-auto flex min-h-screen max-w-7xl flex-col gap-4 px-3 py-4 sm:px-6 sm:py-8">
+      {/* Dark skies switch this subtree to the dark palette so text stays readable. */}
+      <div
+        data-sky-tone={isDarkSky(sky) ? "dark" : "light"}
+        className="mx-auto flex min-h-screen max-w-7xl flex-col gap-4 px-3 py-4 text-foreground sm:px-6 sm:py-8"
+      >
         <AppHeader
           units={units}
           onTemperatureChange={setTemperatureUnit}
@@ -81,7 +85,7 @@ export function WeatherDashboard() {
           )}
         </main>
 
-        <footer className="pb-2 text-center text-xs text-foreground/80">
+        <footer className="sky-text-muted pb-2 text-center text-xs">
           Weather data by{" "}
           <a href="https://open-meteo.com/" target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-2">
             Open-Meteo

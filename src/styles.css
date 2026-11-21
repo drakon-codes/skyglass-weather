@@ -6,7 +6,8 @@
 @source "../src";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+/* Dark palette applies under .dark (theme) or a dark sky ([data-sky-tone="dark"]). */
+@custom-variant dark (&:is(.dark *, [data-sky-tone="dark"] *));
 
 /* Maps CSS variables to Tailwind utilities (e.g. --color-primary -> bg-primary). */
 @theme inline {
@@ -101,6 +102,12 @@
   --glass-strong: oklch(1 0 0 / 0.88);
   --glass-border: oklch(1 0 0 / 0.75);
   --glass-shadow: 0 10px 40px -12px oklch(0.25 0.08 255 / 0.3);
+  --glass-blur: 20px;
+
+  /* Text placed directly on the sky (header, "Saved" label, footer) */
+  --on-sky: oklch(0.2 0.045 258);
+  --on-sky-muted: oklch(0.29 0.045 255);
+  --on-sky-shadow: 0 1px 2px oklch(1 0 0 / 0.45);
 
   /* Weather accents */
   --sun: oklch(0.72 0.17 65);
@@ -112,7 +119,7 @@
   --sky-clear-night: linear-gradient(165deg, oklch(0.2 0.06 270) 0%, oklch(0.3 0.08 265) 55%, oklch(0.42 0.08 285) 100%);
   --sky-cloudy-day: linear-gradient(165deg, oklch(0.72 0.04 240) 0%, oklch(0.83 0.025 230) 55%, oklch(0.91 0.015 220) 100%);
   --sky-cloudy-night: linear-gradient(165deg, oklch(0.24 0.02 260) 0%, oklch(0.32 0.03 255) 55%, oklch(0.4 0.025 250) 100%);
-  --sky-rain-day: linear-gradient(165deg, oklch(0.55 0.07 240) 0%, oklch(0.68 0.06 228) 55%, oklch(0.8 0.04 215) 100%);
+  --sky-rain-day: linear-gradient(165deg, oklch(0.68 0.065 238) 0%, oklch(0.76 0.05 228) 55%, oklch(0.85 0.035 215) 100%);
   --sky-rain-night: linear-gradient(165deg, oklch(0.19 0.04 250) 0%, oklch(0.27 0.05 242) 55%, oklch(0.35 0.045 232) 100%);
   --sky-snow: linear-gradient(165deg, oklch(0.84 0.035 235) 0%, oklch(0.92 0.02 225) 55%, oklch(0.98 0.008 215) 100%);
   --sky-storm: linear-gradient(165deg, oklch(0.22 0.05 275) 0%, oklch(0.32 0.06 285) 55%, oklch(0.44 0.06 300) 100%);
@@ -121,7 +128,9 @@
   --sky-veil: transparent;
 }
 
-.dark {
+/* Dark palette: the dark theme, or any dark (night/storm) sky in light theme. */
+.dark,
+[data-sky-tone="dark"] {
   --background: oklch(0.17 0.03 260);
   --foreground: oklch(0.96 0.01 240);
   --card: oklch(0.22 0.03 260);
@@ -133,7 +142,7 @@
   --secondary: oklch(0.28 0.03 260);
   --secondary-foreground: oklch(0.96 0.01 240);
   --muted: oklch(0.28 0.03 260);
-  --muted-foreground: oklch(0.76 0.03 245);
+  --muted-foreground: oklch(0.8 0.03 245);
   --accent: oklch(0.32 0.04 255);
   --accent-foreground: oklch(0.96 0.01 240);
   --destructive: oklch(0.7 0.19 22);
@@ -144,14 +153,24 @@
   --chart-1: oklch(0.78 0.15 60);
   --chart-2: oklch(0.72 0.12 235);
 
-  --glass: oklch(0.2 0.03 260 / 0.55);
-  --glass-strong: oklch(0.22 0.03 260 / 0.92);
-  --glass-border: oklch(1 0 0 / 0.12);
-  --glass-shadow: 0 10px 40px -12px oklch(0 0 0 / 0.55);
+  /* Darker, more see-through glass; extra blur keeps text on it legible */
+  --glass: oklch(0.14 0.03 262 / 0.45);
+  --glass-strong: oklch(0.17 0.03 262 / 0.86);
+  --glass-border: oklch(1 0 0 / 0.1);
+  --glass-shadow: 0 10px 40px -12px oklch(0 0 0 / 0.6);
+  --glass-blur: 28px;
   --sun: oklch(0.8 0.15 75);
   --rain: oklch(0.72 0.12 235);
   --favorite: oklch(0.82 0.15 80);
-  --sky-veil: oklch(0.12 0.03 260 / 0.5);
+  --on-sky: oklch(0.985 0.005 240);
+  --on-sky-muted: oklch(0.91 0.02 240);
+  --on-sky-shadow: 0 1px 3px oklch(0 0 0 / 0.55);
+}
+
+/* Dark theme dims bright day skies behind the content */
+.dark {
+  --sky-veil: oklch(0.12 0.03 260 / 0.58);
+  --sky-glow-day: radial-gradient(circle, oklch(0.9 0.08 90 / 0.16), transparent 65%);
 }
 
 /* Frosted glass panels */
@@ -159,14 +178,25 @@
   background-color: var(--glass);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
 }
 
 @utility glass-strong {
   background-color: var(--glass-strong);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(24px) saturate(150%);
+  backdrop-filter: blur(calc(var(--glass-blur) + 4px)) saturate(150%);
+}
+
+/* Readable text placed straight on the sky backdrop */
+@utility sky-text {
+  color: var(--on-sky);
+  text-shadow: var(--on-sky-shadow);
+}
+
+@utility sky-text-muted {
+  color: var(--on-sky-muted);
+  text-shadow: var(--on-sky-shadow);
 }
 
 /* Full-screen weather backdrop; `data-sky` picks the gradient */

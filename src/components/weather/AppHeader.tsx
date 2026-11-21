@@ -19,7 +19,7 @@ export function AppHeader({ units, onTemperatureChange, onWindChange, onSelectLo
   return (
     <header className="relative z-20 grid gap-3 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-6">
       <div className="flex items-center justify-between gap-3">
-        <h1 className="flex items-center gap-2 text-xl font-bold tracking-tight">
+        <h1 className="sky-text flex items-center gap-2 text-xl font-bold tracking-tight">
           <span className="glass grid size-10 place-items-center rounded-2xl">
             <CloudSun className="size-5 text-sun" aria-hidden />
           </span>

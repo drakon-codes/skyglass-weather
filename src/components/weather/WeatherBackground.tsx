@@ -1,8 +1,9 @@
 // Full-screen gradient that reflects the current condition and day/night.
+import { isDarkSky } from "@/lib/weatherCodes";
 import type { SkyTheme } from "@/types/weather";
 
 export function WeatherBackground({ sky }: { sky: SkyTheme }) {
-  const isNight = sky.endsWith("night") || sky === "storm";
+  const isNight = isDarkSky(sky);
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
       {/* Re-keyed so each theme change fades in */}
