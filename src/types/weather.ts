@@ -8,10 +8,10 @@ export interface GeocodingResult {
   latitude: number;
   longitude: number;
   elevation?: number;
-  feature_code?: string;
+  feature_code?: string | undefined;
   country_code?: string;
-  country?: string;
-  admin1?: string;
+  country?: string | undefined;
+  admin1?: string | undefined;
   admin2?: string;
   timezone?: string;
   population?: number;
@@ -87,8 +87,8 @@ export interface GeoLocation {
   name: string;
   latitude: number;
   longitude: number;
-  admin1?: string;
-  country?: string;
+  admin1?: string | undefined;
+  country?: string | undefined;
 }
 
 export type TemperatureUnit = "celsius" | "fahrenheit";

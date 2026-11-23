@@ -16,8 +16,8 @@ export interface AirQualityResponse {
 
 export interface ReverseLocation {
   name: string;
-  admin1?: string;
-  country?: string;
+  admin1?: string | undefined;
+  country?: string | undefined;
 }
 
 interface NominatimSearchResult {
@@ -136,7 +136,7 @@ export async function searchCities(query: string, signal?: AbortSignal): Promise
     );
 
     const fallbackResults: GeocodingResult[] = fallback
-      .map((place) => {
+      .map((place): GeocodingResult | null => {
         const address = place.address;
         const name =
           address?.city ||
@@ -159,7 +159,7 @@ export async function searchCities(query: string, signal?: AbortSignal): Promise
           feature_code: place.addresstype,
           admin1: address?.state,
           country: address?.country,
-        } satisfies GeocodingResult;
+        };
       })
       .filter((place): place is GeocodingResult => place !== null);
 
