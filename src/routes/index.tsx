@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { WeatherDashboard } from "@/components/weather/WeatherDashboard";
 
 export const Route = createFileRoute("/")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Nimbus — Live Weather Dashboard" },

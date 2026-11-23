@@ -36,3 +36,4 @@ use the editor.
 - Persisted UI state (units, favourites, theme, last city) goes through `usePersistentState` (useSyncExternalStore over localStorage). Why: SSR-safe hydration and cross-component sync without a context provider.
 - Open-Meteo local time strings are parsed by `src/lib/time.ts`, never via `new Date(iso)` in the browser timezone. Why: times must show in the city's timezone.
 - Weather visuals (glass, sky gradients) are tokens/utilities in `src/styles.css`; components use semantic classes only.
+- Every route sets `staticData.sitemap`; `/sitemap.xml` is built from the router via `src/lib/sitemap.ts`. Why: the sitemap follows page changes automatically.
