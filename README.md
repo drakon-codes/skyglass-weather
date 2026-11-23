@@ -32,6 +32,19 @@ bun run test       # unit tests (Vitest)
 bun run build      # production build
 ```
 
+## Deploying to Vercel
+
+The Vercel build automatically selects Nitro's Vercel preset; local and Lovable builds
+continue using their existing deployment target.
+
+1. Import `drakon-codes/skyglass-weather` in the Vercel dashboard.
+2. Keep the project root set to the repository root.
+3. Use `bun install --frozen-lockfile` as the install command and `bun run build` as the build command.
+4. Leave the output directory unset so Nitro can provide Vercel's build output.
+5. Deploy. No environment variables or API keys are required.
+
+Vercel serves the app over HTTPS, which allows browsers to offer geolocation permission.
+
 ## Project structure
 
 ```text
